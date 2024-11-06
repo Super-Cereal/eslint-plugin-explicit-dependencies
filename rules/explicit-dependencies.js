@@ -64,7 +64,7 @@ module.exports = {
           // If it is a built-in node module
           (opts.allowBuiltin && utils.isBuiltIn(moduleName)) ||
           // If the module is in the list of tsconfig aliases
-          tsAliasesRegexp.exec(moduleName) ||
+          tsAliasesRegexp?.exec(moduleName) ||
           // If the module is in the list of explicitly ignored
           opts.ignore?.includes(moduleName) ||
           // If the module is in package.json

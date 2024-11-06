@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-implicit-dependencies",
+  "name": "eslint-plugin-explicit-dependencies",
   "version": "1.1.1",
   "description": "eslint plugin to detect implicit dependencies",
   "main": "index.js",
@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lennym/eslint-plugin-implicit-dependencies.git"
+    "url": "git+https://github.com/Super-Cereal/eslint-plugin-explicit-dependencies"
   },
   "keywords": [
     "eslint",
     "eslint-plugin"
   ],
-  "author": "Leonard Martin <hello@lennym.co.uk>",
+  "author": "Egor Kuchinskii <egor.kuch@yandex.ru>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lennym/eslint-plugin-implicit-dependencies/issues"
+    "url": "https://github.com/Super-Cereal/eslint-plugin-explicit-dependencies/issues"
   },
-  "homepage": "https://github.com/lennym/eslint-plugin-implicit-dependencies#readme",
+  "homepage": "https://github.com/Super-Cereal/eslint-plugin-explicit-dependencies#readme",
   "dependencies": {
     "findup": "^0.1.5"
   }

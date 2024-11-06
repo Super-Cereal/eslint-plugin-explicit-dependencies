@@ -1,48 +1,56 @@
-# eslint-plugin-implicit-dependencies
+## edu-eslint/explicit-dependencies
 
-eslint plugin to detect implicit dependencies
+A rule for ESLint that checks that all dependencies in your project are explicitly specified either in the `package.json`, or in `tsconfig.json` as aliases
 
-Detects when a module has been 'require'd or 'import'ed that is not listed as a dependency in the project's package.json.
+Based on a solution distributed under the MIT license https://github.com/lennym/eslint-plugin-implicit-dependencies
 
-This helps prevent accidentally depending on a module that is present in node_modules as a result of being installed further down your dependency tree, but is not listed as an explicit dependency of your project.
+### Extension of the original solution
 
-## Usage
-
-Add `implicit-dependencies` to the plugins section of your [ESLint configuration file](http://eslint.org/docs/user-guide/configuring#configuration-file-formats). You can omit the `eslint-plugin-` prefix:
-
-```yaml
-plugins:
-  - implicit-dependencies
-```
-
-Then configure the plugin under the rules section.
-
-```yaml
-rules:
-  - implicit-dependencies/no-implicit: error
-```
+- Taught the rule to approve aliases from the nearest `tsconfig.json` file
+- Taught the rule to approve `@types/{moduleName}` fron the `package.json`
+- Added the `ignore` option if you need to ignore certain modules
+- Added the `allowBuiltin` option if you need to approve the built-in node modules
+- Got rid of the `builtin-modules` dependency by defining the `isBuiltIn` function
 
 ## Options
 
-By default `implicit-dependencies` will only look for dependencies in the `dependencies` section of your package.json. You can include dev, peer and optional dependencies by configuring the rule to include those sections as follows:
+### Dependencies: dev, peer, optional 
 
-
-```yaml
-rules:
-  - implicit-dependencies/no-implicit:
-    - error
-    - dev: true
-      peer: true
-      optional: true
-```
-
-Or if configuring with javascript:
+By default "explicit-dependencies" will only look for dependencies in the dependencies section of your package.json. You can include dev, peer and optional dependencies by configuring the rule to include those sections as follows:
 
 ```javascript
 rules: {
-  'implicit-dependencies/no-implicit': [
+  'explicit-dependencies/explicit': [
     'error',
-    { peer: true, dev: true, optional: true }
+    { dev: true, peer: true, optional: true }
+  ]
+}
+```
+
+### Builtin server modules
+
+To support builtin server modules, add `allowBuiltin` to the rule configuration (default is `false')
+
+```javascript
+rules: {
+  'explicit-dependencies/explicit': [
+    'error',
+    { allowBuiltin: true }
+  ]
+}
+```
+
+### Skipping dependencies
+
+By default, aliases from the nearest `tsconfig.json` are allowed (inherited aliases are not taken into account yet)
+
+To disable the error for a specific package, add `ignore` to the rule configuration.
+
+```javascript
+rules: {
+  'explicit-dependencies/explicit': [
+    'error',
+    { ignore: ['entities', 'utils'] }
   ]
 }
 ```

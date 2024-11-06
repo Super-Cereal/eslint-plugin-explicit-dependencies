@@ -1,7 +1,6 @@
 "use strict";
 
 const path = require("path");
-const findup = require("findup");
 
 const utils = require("./utils");
 
@@ -39,10 +38,8 @@ module.exports = {
     const currentDir = path.dirname(context.getFilename());
 
     // Finding the nearest package.json
-    const rootPath = findup.sync(currentDir, "package.json");
-    const pkg = require(path.join(rootPath, "package.json"));
-
-    const tsAliases = utils.getTSAliases(currentDir);
+    const pkg = require(utils.findup(currentDir, "package.json"));
+    const tsAliasesRegexp = utils.getTSAliasesRegexp(currentDir);
 
     const checkModuleName = (name, node) => {
       let moduleName;
@@ -67,7 +64,7 @@ module.exports = {
           // If it is a built-in node module
           (opts.allowBuiltin && utils.isBuiltIn(moduleName)) ||
           // If the module is in the list of tsconfig aliases
-          tsAliases.includes(moduleName) ||
+          tsAliasesRegexp.exec(moduleName) ||
           // If the module is in the list of explicitly ignored
           opts.ignore?.includes(moduleName) ||
           // If the module is in package.json

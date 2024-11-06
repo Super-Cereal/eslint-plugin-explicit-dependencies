@@ -1,23 +1,44 @@
 const path = require('path');
+const fs = require('fs');
 
-/** Taking aliases from tsconfig */
-function getTSAliases(currentDir) {
-  // Finding the nearest tsconfig.json
-  let tsConfig;
-  try {
-    const tsConfigPath = findup.sync(currentDir, "tsconfig.json");
-    tsConfig = require(path.join(tsConfigPath, "tsconfig.json"));
-  } catch (e) {}
+function findup(dir, filename) {
+  let currentDir = path.resolve(dir);
 
-  let aliases = [];
-  if (tsConfig && tsConfig.compilerOptions && tsConfig.compilerOptions.paths) {
-    // if a specified smth like "utils/*", then removing the excess
-    aliases = Object.keys(tsConfig.compilerOptions.paths).map((key) =>
-      key.includes("/*") ? key.split("/*")[0] : key
+  while (
+    currentDir !== "/" &&
+    !fs.existsSync(path.join(currentDir, filename))
+  ) {
+    currentDir = path.dirname(currentDir);
+  }
+
+  if (currentDir === "/") {
+    throw new Error(
+      `Unable to find ${filename} in directory tree of directory ` + dir
     );
   }
 
-  return aliases;
+  return path.join(currentDir, filename);
+}
+
+/** Taking aliases from tsconfig */
+function getTSAliasesRegexp(currentDir) {
+  // Finding the nearest tsconfig.json
+  let tsConfig;
+  try {
+    tsConfig = require(findup(currentDir, "tsconfig.json"));
+  } catch (e) {}
+
+  let aliasesRegexp = null;
+  if (tsConfig && tsConfig.compilerOptions && tsConfig.compilerOptions.paths) {
+    // if a specified smth like "utils/*", then removing the excess
+    aliases = Object.keys(tsConfig.compilerOptions.paths).map((key) =>
+      key.includes("/*") ? key.split("/*")[0] + '\/.*' : key
+    );
+
+    aliasesRegexp = new RegExp(`^(${aliases.join(')|(')})$`);
+  }
+
+  return aliasesRegexp;
 }
 
 // Removing properties of the prototype

@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-explicit-dependencies",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "eslint plugin to detect implicit dependencies",
   "main": "index.js",
   "scripts": {
